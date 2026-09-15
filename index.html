@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="fr" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Encre & Ombre — Littérature Sécurisée</title>
+    <meta name="description" content="Plateforme littéraire sécurisée pour les œuvres d'Encre & Ombre avec espace lecteur chiffré, commandes mobiles sécurisées et protection du contenu." />
+    <meta property="og:title" content="Encre & Ombre — Littérature Sécurisée" />
+    <meta property="og:description" content="Plateforme littéraire sécurisée pour les œuvres d'Encre & Ombre avec espace lecteur chiffré, commandes mobiles sécurisées et protection du contenu." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- PWA Manifest & Mobile App Configuration -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#c9a84c" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Encre &amp; Ombre" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <link rel="icon" type="image/png" href="/icon-192.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-[#0c0b0f] text-[#f0ead8] font-sans antialiased selection:bg-[#c9a84c]/30 selection:text-[#f0ead8]">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker
+            .register('/sw.js')
+            .then(function(reg) {
+              console.log('✅ Service Worker Encre & Ombre actif !', reg.scope);
+            })
+            .catch(function(err) {
+              console.warn('Service Worker registration note:', err);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>
+

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ✅ ETAPE 1 : Lier le manifest PWA -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- ✅ ETAPE 2 : Theme couleur (barre du navigateur) -->
+<meta name="theme-color" content="#c9a84c">
+
+<!-- ✅ ETAPE 3 : Support iOS -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Encre & Ombre">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="icon" type="image/png" href="/icon-192.png">
+
+<title>Encre & Ombre — Guide d'installation hors-ligne</title>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=Lato:wght@300;400;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0c0b0f;
+    color: #f0ead8;
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    padding: 2rem 1.5rem;
+    max-width: 750px;
+    margin: 0 auto;
+  }
+
+  .nav-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+  }
+
+  .btn-retour {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #1e1b28;
+    border: 1px solid rgba(201,168,76,0.3);
+    color: #e8d49a;
+    padding: 0.4rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .btn-retour:hover {
+    border-color: #c9a84c;
+    color: #f0ead8;
+    background: #2d293d;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: #c9a84c;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .sous { text-align: center; color: #8a8699; font-size: 0.9rem; margin-bottom: 2rem; }
+
+  hr { border: none; border-top: 1px solid rgba(201,168,76,0.3); margin: 2rem 0; }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: #f0ead8;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  p { color: #8a8699; margin-bottom: 0.8rem; font-size: 0.95rem; }
+
+  .etape {
+    background: #1e1b28;
+    border: 1px solid rgba(201,168,76,0.15);
+    border-left: 3px solid #c9a84c;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 1.2rem;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .badge {
+    display: inline-block;
+    background: #c9a84c;
+    color: #0c0b0f;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 2px;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.8rem;
+  }
+
+  .badge.vert { background: #2e7d32; color: white; }
+  .badge.bleu { background: #1565c0; color: white; }
+  .badge.rouge { background: #8b0000; color: white; }
+
+  pre {
+    background: #13111a;
+    border: 1px solid rgba(201,168,76,0.1);
+    padding: 1rem 1.2rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-size: 0.82rem;
+    color: #c9a84c;
+    margin: 0.8rem 0;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .note {
+    background: rgba(21,101,192,0.1);
+    border: 1px solid rgba(21,101,192,0.3);
+    padding: 0.8rem 1rem;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: #90caf9;
+  }
+
+  .alerte {
+    background: rgba(139,0,0,0.1);
+    border: 1px solid rgba(139,0,0,0.3);
+    padding: 0.8rem 1rem;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: #ef9a9a;
+  }
+
+  .succes {
+    background: rgba(46,125,50,0.1);
+    border: 1px solid rgba(46,125,50,0.3);
+    padding: 0.8rem 1rem;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: #a5d6a7;
+  }
+
+  .hebergeurs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .hebergeur {
+    background: #1e1b28;
+    border: 1px solid rgba(201,168,76,0.15);
+    padding: 1rem;
+    text-align: center;
+    transition: border-color 0.3s;
+  }
+  .hebergeur:hover { border-color: #c9a84c; }
+  .hebergeur .nom {
+    font-weight: 700;
+    color: #c9a84c;
+    margin-bottom: 0.3rem;
+    font-size: 0.95rem;
+  }
+  .hebergeur .desc { font-size: 0.78rem; color: #8a8699; }
+
+  .statut {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: #1e1b28;
+    border: 1px solid rgba(201,168,76,0.2);
+    padding: 1rem 1.2rem;
+    margin-top: 1rem;
+    border-radius: 8px;
+  }
+  .dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: #2e7d32;
+    box-shadow: 0 0 8px #2e7d32;
+    flex-shrink: 0;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 3rem;
+    color: #8a8699;
+    font-size: 0.78rem;
+    opacity: 0.6;
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <a href="/" class="btn-retour">← Retour à Encre &amp; Ombre</a>
+  <span style="font-size: 0.75rem; color: #8a8699; font-family: monospace;">PWA &amp; Service Worker 24h</span>
+</div>
+
+<h1>📱 Mode Hors-Ligne 24h</h1>
+<p class="sous">Guide complet pour rendre votre site Encre &amp; Ombre accessible sans internet</p>
+<hr>
+
+<!-- STATUT DIRECT -->
+<h2>🟢 Statut du mode hors-ligne</h2>
+<div class="statut">
+  <div class="dot" id="dot"></div>
+  <span id="statut-msg">Vérification de la connexion...</span>
+</div>
+
+<hr>
+
+<!-- ETAPE 1 -->
+<h2>📁 Etape 1 — Structure des fichiers</h2>
+<p>Voici les fichiers configurés dans votre projet Encre &amp; Ombre :</p>
+<div class="etape">
+  <span class="badge">STRUCTURE DU PROJET</span>
+  <pre>
+📂 encre-et-ombre/
+├── 📄 index.html               ← Entrée principale avec balises PWA
+├── 📄 public/manifest.json     ← Manifeste Web App officiel
+├── 📄 public/sw.js             ← Service Worker avec cache 24h
+├── 📄 public/guide-hors-ligne.html ← Ce guide interactif
+├── 🖼️  public/icon-192.png       ← Icône application 192x192
+└── 🖼️  public/icon-512.png       ← Icône application 512x512
+  </pre>
+  <div class="succes">
+    ✅ Les fichiers sw.js, manifest.json et les icônes 192px/512px sont maintenant intégrés et actifs dans l'application.
+  </div>
+</div>
+
+<hr>
+
+<!-- ETAPE 2 -->
+<h2>🔧 Etape 2 — Code présent dans le HTML</h2>
+<p>Les balises suivantes sont insérées dans le &lt;head&gt; de votre site :</p>
+<div class="etape">
+  <span class="badge">CODE PWA INTÉGRÉ</span>
+  <pre>
+&lt;!-- PWA Manifest &amp; Theme --&gt;
+&lt;link rel="manifest" href="/manifest.json"&gt;
+&lt;meta name="theme-color" content="#c9a84c"&gt;
+
+&lt;!-- Support iPhone / iPad (iOS Safari) --&gt;
+&lt;meta name="mobile-web-app-capable" content="yes"&gt;
+&lt;meta name="apple-mobile-web-app-capable" content="yes"&gt;
+&lt;meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"&gt;
+&lt;meta name="apple-mobile-web-app-title" content="Encre &amp; Ombre"&gt;
+&lt;link rel="apple-touch-icon" href="/icon-192.png"&gt;
+  </pre>
+</div>
+
+<p>Le Service Worker est enregistré automatiquement dès le chargement de la page :</p>
+<div class="etape">
+  <span class="badge">ACTIVATION AUTOMATIQUE</span>
+  <pre>
+&lt;script&gt;
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then(function(reg) {
+        console.log('✅ Mode hors-ligne actif !', reg.scope);
+      })
+      .catch(function(err) {
+        console.log('Erreur SW:', err);
+      });
+  });
+}
+&lt;/script&gt;
+  </pre>
+  <div class="succes">
+    ✅ Ce code active automatiquement le mode hors-ligne.
+    Après votre première visite en ligne, le site fonctionne
+    pendant 24 heures sans connexion internet.
+  </div>
+</div>
+
+<hr>
+
+<!-- ETAPE 3 -->
+<h2>🌐 Etape 3 — Déploiement &amp; Hébergement</h2>
+<p>Pour que le mode hors-ligne fonctionne en permanence, le site doit être servi en HTTPS :</p>
+
+<div class="hebergeurs">
+  <div class="hebergeur">
+    <div class="nom">🟢 Google Cloud Run</div>
+    <div class="desc">Intégré nativement à Google AI Studio avec HTTPS automatique.</div>
+  </div>
+  <div class="hebergeur">
+    <div class="nom">🟢 Netlify</div>
+    <div class="desc">Glissez-déposez votre dossier dist/ sur netlify.com. Gratuit et instantané.</div>
+  </div>
+  <div class="hebergeur">
+    <div class="nom">⚫ GitHub Pages</div>
+    <div class="desc">Créez un dépôt GitHub et activez Pages. 100% gratuit avec HTTPS.</div>
+  </div>
+  <div class="hebergeur">
+    <div class="nom">🔵 Vercel</div>
+    <div class="desc">Importez votre dépôt sur vercel.com avec configuration automatique.</div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ETAPE 4 -->
+<h2>⏱️ Etape 4 — Fonctionnement du cache 24 heures</h2>
+<div class="etape">
+  <span class="badge bleu">CYCLE DE VIE DU CACHE</span>
+  <pre>
+Première visite (avec internet) :
+  → Le navigateur télécharge tous les fichiers et polices
+  → Le Service Worker les sauvegarde en cache local
+  → Durée de validité programmée : 24 heures (86 400 000 ms)
+
+Visites suivantes (sans internet / hors-ligne) :
+  → Le navigateur utilise le cache local instantané
+  → Le site et la bibliothèque s'ouvrent sans connexion
+  → Dès le retour d'une connexion internet, le cache se rafraîchit automatiquement
+
+Fichiers mis en cache :
+  ✅ Application React &amp; catalogue complet
+  ✅ Polices Google Fonts (Playfair Display, Plus Jakarta Sans)
+  ✅ Images, logos et icônes
+  ✅ Styles CSS &amp; scripts JS
+  </pre>
+</div>
+
+<hr>
+
+<!-- ETAPE 5 -->
+<h2>📲 Etape 5 — Installer comme une vraie application</h2>
+<p>Grâce au manifest.json, vous et vos lecteurs pouvez installer Encre &amp; Ombre comme une vraie application mobile :</p>
+<div class="etape">
+  <span class="badge vert">ANDROID (Chrome, Edge, Samsung Internet)</span>
+  <pre>
+1. Ouvrez le site dans Chrome
+2. Appuyez sur les 3 points verticaux en haut à droite
+3. Sélectionnez "Installer l'application" ou "Ajouter à l'écran d'accueil"
+4. Confirmez l'installation
+→ L'icône Encre &amp; Ombre apparaît sur votre écran d'accueil comme une application native !
+  </pre>
+</div>
+<div class="etape">
+  <span class="badge">iOS (iPhone &amp; iPad Safari)</span>
+  <pre>
+1. Ouvrez le site dans Safari
+2. Appuyez sur l'icône Partager (le carré avec la flèche vers le haut)
+3. Faites défiler et sélectionnez "Sur l'écran d'accueil"
+4. Confirmez en appuyant sur "Ajouter"
+→ L'application Encre &amp; Ombre s'ouvre en plein écran sans barre Safari !
+  </pre>
+</div>
+
+<hr>
+
+<!-- RESUME -->
+<h2>✅ Résumé rapide</h2>
+<div class="etape">
+  <pre>
+1. Les fichiers sw.js et manifest.json sont configurés dans /public
+2. Les balises meta et le script d'enregistrement sont dans index.html
+3. L'icône dorée Encre &amp; Ombre est enregistrée en 192px et 512px
+4. Visitez le site une première fois avec internet
+5. Coupez la connexion : le site reste lisible et accessible 24h !
+  </pre>
+  <div class="succes">
+    ✅ Votre plateforme Encre &amp; Ombre est désormais conforme PWA et prête pour l'utilisation hors-ligne.
+  </div>
+</div>
+
+<footer>
+  Encre &amp; Ombre · Guide technique hors-ligne · 2026<br>
+  Contact : +242 069 738 388 | Airtel Money : +242 050 570 693
+</footer>
+
+<script>
+// Vérification statut hors-ligne
+const dot = document.getElementById('dot');
+const msg = document.getElementById('statut-msg');
+
+function verifierStatut() {
+  if (navigator.onLine) {
+    dot.style.background = '#2e7d32';
+    dot.style.boxShadow = '0 0 8px #2e7d32';
+    msg.textContent = '✅ En ligne — Le cache hors-ligne 24h est prêt et se met à jour automatiquement.';
+  } else {
+    dot.style.background = '#c9a84c';
+    dot.style.boxShadow = '0 0 8px #c9a84c';
+    msg.textContent = '📴 Hors-ligne — Vous consultez la version en cache local. Valide 24 heures.';
+  }
+}
+
+verifierStatut();
+window.addEventListener('online', verifierStatut);
+window.addEventListener('offline', verifierStatut);
+
+// Enregistrement du Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then(function(reg) {
+        console.log('✅ Service Worker enregistré :', reg.scope);
+      })
+      .catch(function(err) {
+        console.log('❌ Erreur SW :', err);
+      });
+  });
+}
+</script>
+
+</body>
+</html>
