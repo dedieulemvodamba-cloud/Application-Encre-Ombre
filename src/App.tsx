@@ -1,7 +1,5 @@
 import WelcomeIntro from "./components/WelcomeIntro";
 import AmbientSound from "./components/AmbientSound";
-
-
 function App() {
   return (
     <>
