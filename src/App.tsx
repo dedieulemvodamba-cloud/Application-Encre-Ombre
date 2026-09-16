@@ -1,3 +1,18 @@
+import WelcomeIntro from "./components/WelcomeIntro";
+import AmbientSound from "./components/AmbientSound";
+
+function App() {
+  return (
+    <>
+      <WelcomeIntro />
+      <AmbientSound />
+      {/* le reste de ton application ici */}
+    </>
+  );
+}
+
+export default App;
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { Book, UserAccount, SecurityAuditItem, OrderReceipt } from './types';
 import { BOOKS_COLLECTION } from './data/books';
