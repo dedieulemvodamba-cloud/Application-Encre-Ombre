@@ -18,6 +18,7 @@ import { SplashScreen } from './components/SplashScreen';
 import { OfflineGuideModal } from './components/OfflineGuideModal';
 import { OfflineIndicator } from './components/OfflineIndicator';
 import { ShieldAlert, KeyRound, RefreshCw, CheckCircle2 } from 'lucide-react';
+import AmbientSound from './components/AmbientSound';
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -176,6 +177,9 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0c0b0f] text-[#f0ead8] selection:bg-[#c9a84c]/30 selection:text-[#f0ead8]">
+      {/* Ambient background sound */}
+      <AmbientSound />
+
       {/* Top Security Status Ribbon */}
       <SecurityBadgeBanner sessionToken={sessionToken} auditCount={auditLogs.length} />
 
