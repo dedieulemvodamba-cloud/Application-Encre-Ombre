@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Book, UserAccount, SecurityAuditItem, OrderReceipt } from './types';
-import { BOOKS_COLLECTION } from './data/books';
 import { sha256, generateSecureToken } from './lib/crypto';
 import { SecurityBadgeBanner } from './components/SecurityBadgeBanner';
 import { Navbar } from './components/Navbar';
@@ -17,7 +16,7 @@ import { SecureMemberAreaModal } from './components/SecureMemberAreaModal';
 import { SplashScreen } from './components/SplashScreen';
 import { OfflineGuideModal } from './components/OfflineGuideModal';
 import { OfflineIndicator } from './components/OfflineIndicator';
-import { ShieldAlert, KeyRound, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { ShieldAlert, RefreshCw } from 'lucide-react';
 import AmbientSound from './components/AmbientSound';
 
 export default function App() {
@@ -25,28 +24,40 @@ export default function App() {
   const [showOfflineGuide, setShowOfflineGuide] = useState(false);
 
   // Global Cryptographic Session
-  const [sessionToken] = useState(() => generateSecureToken('SES-AUTH', 16));
+  const [sessionToken] = useState(() =>
+    generateSecureToken('SES-AUTH', 16)
+  );
 
   // Current User State
   const [currentUser, setCurrentUser] = useState<UserAccount | null>(() => {
-    const saved = localStorage.getItem('eo_user_account');
-    return saved ? JSON.parse(saved) : null;
+    try {
+      const saved = localStorage.getItem('eo_user_account');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      localStorage.removeItem('eo_user_account');
+      return null;
+    }
   });
 
   // Security Audit Log State
   const [auditLogs, setAuditLogs] = useState<SecurityAuditItem[]>(() => {
     const saved = localStorage.getItem('eo_audit_logs');
+
     if (saved) {
       try {
         return JSON.parse(saved);
-      } catch {}
+      } catch {
+        // Données invalides : on repart avec le journal initial
+      }
     }
+
     return [
       {
         id: 'INIT-BOOT-01',
         timestamp: new Date().toISOString(),
         event: 'SECURITY_BOOT_OK',
-        details: 'Initialisation de l\'environnement Web Crypto AES-256 & CSPRNG',
+        details:
+          "Initialisation de l'environnement Web Crypto AES-256 & CSPRNG",
         severity: 'info',
         hash: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
       },
@@ -55,13 +66,22 @@ export default function App() {
 
   // User Orders History
   const [userOrders, setUserOrders] = useState<OrderReceipt[]>(() => {
-    const saved = localStorage.getItem('eo_user_orders');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem('eo_user_orders');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      localStorage.removeItem('eo_user_orders');
+      return [];
+    }
   });
 
   // Modals & Reader
-  const [selectedBookForReader, setSelectedBookForReader] = useState<Book | null>(null);
-  const [selectedBookForOrder, setSelectedBookForOrder] = useState<Book | null>(null);
+  const [selectedBookForReader, setSelectedBookForReader] =
+    useState<Book | null>(null);
+
+  const [selectedBookForOrder, setSelectedBookForOrder] =
+    useState<Book | null>(null);
+
   const [showMemberArea, setShowMemberArea] = useState(false);
 
   // Emergency Lockout Mode
@@ -69,7 +89,10 @@ export default function App() {
 
   // Save audit logs to localStorage
   useEffect(() => {
-    localStorage.setItem('eo_audit_logs', JSON.stringify(auditLogs.slice(0, 50)));
+    localStorage.setItem(
+      'eo_audit_logs',
+      JSON.stringify(auditLogs.slice(0, 50))
+    );
   }, [auditLogs]);
 
   // Save user orders to localStorage
@@ -79,8 +102,13 @@ export default function App() {
 
   // Log Security Event
   const logSecurityEvent = useCallback(
-    async (event: string, details: string, severity: 'info' | 'warn' | 'critical' = 'info') => {
+    async (
+      event: string,
+      details: string,
+      severity: 'info' | 'warn' | 'critical' = 'info'
+    ) => {
       const timestamp = new Date().toISOString();
+
       const raw = `${event}:${details}:${timestamp}:${sessionToken}`;
       const hash = await sha256(raw);
 
@@ -93,7 +121,7 @@ export default function App() {
         hash,
       };
 
-      setAuditLogs(prev => [item, ...prev]);
+      setAuditLogs((prev) => [item, ...prev]);
     },
     [sessionToken]
   );
@@ -107,8 +135,12 @@ export default function App() {
   // Logout handler
   const handleLogout = () => {
     if (currentUser) {
-      logSecurityEvent('LOGOUT_USER', `Déconnexion utilisateur ${currentUser.email}`);
+      logSecurityEvent(
+        'LOGOUT_USER',
+        `Déconnexion utilisateur ${currentUser.email}`
+      );
     }
+
     setCurrentUser(null);
     localStorage.removeItem('eo_user_account');
   };
@@ -117,11 +149,13 @@ export default function App() {
   const handleEmergencyLock = () => {
     logSecurityEvent(
       'EMERGENCY_LOCK',
-      'Verrouillage d\'urgence déclenché : purge des sessions en mémoire',
+      "Verrouillage d'urgence déclenché : purge des sessions en mémoire",
       'critical'
     );
+
     setCurrentUser(null);
     localStorage.removeItem('eo_user_account');
+
     setEmergencyLocked(true);
     setSelectedBookForReader(null);
     setSelectedBookForOrder(null);
@@ -131,14 +165,22 @@ export default function App() {
   // Unlock from emergency
   const handleUnlockEmergency = () => {
     setEmergencyLocked(false);
-    logSecurityEvent('EMERGENCY_UNLOCK', 'Terminal déverrouillé par l\'opérateur', 'info');
+
+    logSecurityEvent(
+      'EMERGENCY_UNLOCK',
+      "Terminal déverrouillé par l'opérateur",
+      'info'
+    );
   };
 
+  // Splash Screen
   if (showSplash) {
-    return <SplashScreen onFinish={() => setShowSplash(false)} />;
+    return (
+      <SplashScreen onFinish={() => setShowSplash(false)} />
+    );
   }
 
-  // If emergency locked, render high-security lockdown screen
+  // Emergency Lock Screen
   if (emergencyLocked) {
     return (
       <div className="min-h-screen bg-[#0c0b0f] text-[#f0ead8] flex items-center justify-center p-4">
@@ -151,14 +193,16 @@ export default function App() {
             <span className="text-[11px] uppercase tracking-[0.25em] text-red-400 font-mono block mb-1">
               Protocole d'Urgence Actif
             </span>
+
             <h2 className="font-serif text-2xl font-bold text-[#f0ead8]">
               Terminal Verrouillé
             </h2>
           </div>
 
           <p className="text-xs text-[#8a8699] leading-relaxed">
-            Par mesure de précaution, toutes les clés de session ont été purgées et les
-            accès restreints. Vos données chiffrées restent intactes.
+            Par mesure de précaution, toutes les clés de session ont été
+            purgées et les accès restreints. Vos données chiffrées restent
+            intactes.
           </p>
 
           <div className="pt-2">
@@ -181,7 +225,10 @@ export default function App() {
       <AmbientSound />
 
       {/* Top Security Status Ribbon */}
-      <SecurityBadgeBanner sessionToken={sessionToken} auditCount={auditLogs.length} />
+      <SecurityBadgeBanner
+        sessionToken={sessionToken}
+        auditCount={auditLogs.length}
+      />
 
       {/* Main Navigation */}
       <Navbar
@@ -204,8 +251,8 @@ export default function App() {
 
         {/* Œuvres List */}
         <OeuvresList
-          onReadExcerpt={book => setSelectedBookForReader(book)}
-          onOrderBook={book => setSelectedBookForOrder(book)}
+          onReadExcerpt={(book) => setSelectedBookForReader(book)}
+          onOrderBook={(book) => setSelectedBookForOrder(book)}
         />
 
         {/* Genres and Literature Quote */}
@@ -214,7 +261,7 @@ export default function App() {
         {/* About / Manifesto */}
         <AProposSection />
 
-        {/* Community VIP & Newsletter ("Ne ratez rien") */}
+        {/* Community VIP & Newsletter */}
         <CommunitySection onSecurityEvent={logSecurityEvent} />
 
         {/* Contact with Mobile Money info & Encrypted Form */}
@@ -229,20 +276,24 @@ export default function App() {
       />
 
       {/* Live Offline Indicator */}
-      <OfflineIndicator onOpenGuide={() => setShowOfflineGuide(true)} />
+      <OfflineIndicator
+        onOpenGuide={() => setShowOfflineGuide(true)}
+      />
 
-      {/* MODAL: Offline 24h & PWA Installation Guide */}
+      {/* Offline 24h & PWA Installation Guide */}
       {showOfflineGuide && (
-        <OfflineGuideModal onClose={() => setShowOfflineGuide(false)} />
+        <OfflineGuideModal
+          onClose={() => setShowOfflineGuide(false)}
+        />
       )}
 
-      {/* MODAL: Secure E-Reader with Dynamic Watermark */}
+      {/* Secure E-Reader */}
       {selectedBookForReader && (
         <SecureReaderModal
           book={selectedBookForReader}
           sessionToken={sessionToken}
           onClose={() => setSelectedBookForReader(null)}
-          onOrderNow={book => {
+          onOrderNow={(book) => {
             setSelectedBookForReader(null);
             setSelectedBookForOrder(book);
           }}
@@ -250,20 +301,20 @@ export default function App() {
         />
       )}
 
-      {/* MODAL: MTN MoMo & Airtel Money Cryptographic Checkout with Transaction History */}
+      {/* Mobile Money Checkout */}
       {selectedBookForOrder && (
         <MobileMoneyOrderModal
           book={selectedBookForOrder}
           userOrders={userOrders}
           onClose={() => setSelectedBookForOrder(null)}
-          onOrderCompleted={receipt => {
-            setUserOrders(prev => [receipt, ...prev]);
+          onOrderCompleted={(receipt) => {
+            setUserOrders((prev) => [receipt, ...prev]);
           }}
           onSecurityEvent={logSecurityEvent}
         />
       )}
 
-      {/* MODAL: Espace Lecteur Sécurisé, Vault Chiffré & Journal d'Audit */}
+      {/* Secure Member Area */}
       {showMemberArea && (
         <SecureMemberAreaModal
           currentUser={currentUser}
