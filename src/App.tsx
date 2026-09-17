@@ -1,6 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Book, UserAccount, SecurityAuditItem, OrderReceipt } from './types';
+import type {
+  Book,
+  UserAccount,
+  SecurityAuditItem,
+  OrderReceipt,
+} from './types';
+
 import { sha256, generateSecureToken } from './lib/crypto';
+
 import { SecurityBadgeBanner } from './components/SecurityBadgeBanner';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -16,6 +23,7 @@ import { SecureMemberAreaModal } from './components/SecureMemberAreaModal';
 import { SplashScreen } from './components/SplashScreen';
 import { OfflineGuideModal } from './components/OfflineGuideModal';
 import { OfflineIndicator } from './components/OfflineIndicator';
+
 import { ShieldAlert, RefreshCw } from 'lucide-react';
 import AmbientSound from './components/AmbientSound';
 
@@ -23,119 +31,180 @@ export default function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [showOfflineGuide, setShowOfflineGuide] = useState(false);
 
-  // Global Cryptographic Session
+  // Session cryptographique
   const [sessionToken] = useState(() =>
     generateSecureToken('SES-AUTH', 16)
   );
 
-  // Current User State
-  const [currentUser, setCurrentUser] = useState<UserAccount | null>(() => {
-    try {
-      const saved = localStorage.getItem('eo_user_account');
-      return saved ? JSON.parse(saved) : null;
-    } catch {
-      localStorage.removeItem('eo_user_account');
-      return null;
-    }
-  });
-
-  // Security Audit Log State
-  const [auditLogs, setAuditLogs] = useState<SecurityAuditItem[]>(() => {
-    const saved = localStorage.getItem('eo_audit_logs');
-
-    if (saved) {
+  // Utilisateur actuel
+  const [currentUser, setCurrentUser] =
+    useState<UserAccount | null>(() => {
       try {
-        return JSON.parse(saved);
+        const saved = localStorage.getItem('eo_user_account');
+
+        if (!saved) {
+          return null;
+        }
+
+        return JSON.parse(saved) as UserAccount;
       } catch {
-        // Données invalides : on repart avec le journal initial
+        localStorage.removeItem('eo_user_account');
+        return null;
       }
-    }
+    });
 
-    return [
-      {
-        id: 'INIT-BOOT-01',
-        timestamp: new Date().toISOString(),
-        event: 'SECURITY_BOOT_OK',
-        details:
-          "Initialisation de l'environnement Web Crypto AES-256 & CSPRNG",
-        severity: 'info',
-        hash: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
-      },
-    ];
-  });
+  // Journal de sécurité
+  const [auditLogs, setAuditLogs] =
+    useState<SecurityAuditItem[]>(() => {
+      try {
+        const saved = localStorage.getItem('eo_audit_logs');
 
-  // User Orders History
-  const [userOrders, setUserOrders] = useState<OrderReceipt[]>(() => {
-    try {
-      const saved = localStorage.getItem('eo_user_orders');
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      localStorage.removeItem('eo_user_orders');
-      return [];
-    }
-  });
+        if (saved) {
+          return JSON.parse(saved) as SecurityAuditItem[];
+        }
+      } catch {
+        // On utilise le journal initial
+      }
 
-  // Modals & Reader
+      return [
+        {
+          id: 'INIT-BOOT-01',
+          timestamp: new Date().toISOString(),
+          event: 'SECURITY_BOOT_OK',
+          details:
+            "Initialisation de l'environnement Web Crypto AES-256 & CSPRNG",
+          severity: 'info',
+          hash:
+            'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+        },
+      ];
+    });
+
+  // Historique des commandes
+  const [userOrders, setUserOrders] =
+    useState<OrderReceipt[]>(() => {
+      try {
+        const saved = localStorage.getItem('eo_user_orders');
+
+        if (!saved) {
+          return [];
+        }
+
+        return JSON.parse(saved) as OrderReceipt[];
+      } catch {
+        localStorage.removeItem('eo_user_orders');
+        return [];
+      }
+    });
+
+  // Lecteur
   const [selectedBookForReader, setSelectedBookForReader] =
     useState<Book | null>(null);
 
+  // Commande
   const [selectedBookForOrder, setSelectedBookForOrder] =
     useState<Book | null>(null);
 
-  const [showMemberArea, setShowMemberArea] = useState(false);
+  // Espace membre
+  const [showMemberArea, setShowMemberArea] =
+    useState(false);
 
-  // Emergency Lockout Mode
-  const [emergencyLocked, setEmergencyLocked] = useState(false);
+  // Verrouillage d'urgence
+  const [emergencyLocked, setEmergencyLocked] =
+    useState(false);
 
-  // Save audit logs to localStorage
+  // Sauvegarde du journal
   useEffect(() => {
-    localStorage.setItem(
-      'eo_audit_logs',
-      JSON.stringify(auditLogs.slice(0, 50))
-    );
+    try {
+      localStorage.setItem(
+        'eo_audit_logs',
+        JSON.stringify(auditLogs.slice(0, 50))
+      );
+    } catch (error) {
+      console.error(
+        'Erreur sauvegarde journal sécurité:',
+        error
+      );
+    }
   }, [auditLogs]);
 
-  // Save user orders to localStorage
+  // Sauvegarde des commandes
   useEffect(() => {
-    localStorage.setItem('eo_user_orders', JSON.stringify(userOrders));
+    try {
+      localStorage.setItem(
+        'eo_user_orders',
+        JSON.stringify(userOrders)
+      );
+    } catch (error) {
+      console.error(
+        'Erreur sauvegarde commandes:',
+        error
+      );
+    }
   }, [userOrders]);
 
-  // Log Security Event
+  // Journalisation sécurité
   const logSecurityEvent = useCallback(
     async (
       event: string,
       details: string,
-      severity: 'info' | 'warn' | 'critical' = 'info'
+      severity:
+        | 'info'
+        | 'warn'
+        | 'critical' = 'info'
     ) => {
-      const timestamp = new Date().toISOString();
+      try {
+        const timestamp = new Date().toISOString();
 
-      const raw = `${event}:${details}:${timestamp}:${sessionToken}`;
-      const hash = await sha256(raw);
+        const raw =
+          `${event}:${details}:${timestamp}:${sessionToken}`;
 
-      const item: SecurityAuditItem = {
-        id: generateSecureToken('EVT', 8),
-        timestamp,
-        event,
-        details,
-        severity,
-        hash,
-      };
+        const hash = await sha256(raw);
 
-      setAuditLogs((prev) => [item, ...prev]);
+        const item: SecurityAuditItem = {
+          id: generateSecureToken('EVT', 8),
+          timestamp,
+          event,
+          details,
+          severity,
+          hash,
+        };
+
+        setAuditLogs((prev) => [
+          item,
+          ...prev,
+        ]);
+      } catch (error) {
+        console.error(
+          'Erreur journalisation sécurité:',
+          error
+        );
+      }
     },
     [sessionToken]
   );
 
-  // Login handler
+  // Connexion
   const handleLogin = (user: UserAccount) => {
     setCurrentUser(user);
-    localStorage.setItem('eo_user_account', JSON.stringify(user));
+
+    try {
+      localStorage.setItem(
+        'eo_user_account',
+        JSON.stringify(user)
+      );
+    } catch (error) {
+      console.error(
+        'Erreur sauvegarde utilisateur:',
+        error
+      );
+    }
   };
 
-  // Logout handler
+  // Déconnexion
   const handleLogout = () => {
     if (currentUser) {
-      logSecurityEvent(
+      void logSecurityEvent(
         'LOGOUT_USER',
         `Déconnexion utilisateur ${currentUser.email}`
       );
@@ -145,9 +214,9 @@ export default function App() {
     localStorage.removeItem('eo_user_account');
   };
 
-  // Emergency Lock
+  // Verrouillage d'urgence
   const handleEmergencyLock = () => {
-    logSecurityEvent(
+    void logSecurityEvent(
       'EMERGENCY_LOCK',
       "Verrouillage d'urgence déclenché : purge des sessions en mémoire",
       'critical'
@@ -162,11 +231,11 @@ export default function App() {
     setShowMemberArea(false);
   };
 
-  // Unlock from emergency
+  // Déverrouillage
   const handleUnlockEmergency = () => {
     setEmergencyLocked(false);
 
-    logSecurityEvent(
+    void logSecurityEvent(
       'EMERGENCY_UNLOCK',
       "Terminal déverrouillé par l'opérateur",
       'info'
@@ -176,15 +245,18 @@ export default function App() {
   // Splash Screen
   if (showSplash) {
     return (
-      <SplashScreen onFinish={() => setShowSplash(false)} />
+      <SplashScreen
+        onFinish={() => setShowSplash(false)}
+      />
     );
   }
 
-  // Emergency Lock Screen
+  // Écran verrouillé
   if (emergencyLocked) {
     return (
       <div className="min-h-screen bg-[#0c0b0f] text-[#f0ead8] flex items-center justify-center p-4">
         <div className="max-w-md w-full p-8 rounded-2xl bg-[#13111a] border border-red-500/50 shadow-2xl text-center space-y-6">
+
           <div className="w-16 h-16 rounded-full bg-red-950/40 border border-red-500/60 text-red-400 flex items-center justify-center mx-auto animate-pulse">
             <ShieldAlert className="w-8 h-8" />
           </div>
@@ -200,20 +272,20 @@ export default function App() {
           </div>
 
           <p className="text-xs text-[#8a8699] leading-relaxed">
-            Par mesure de précaution, toutes les clés de session ont été
-            purgées et les accès restreints. Vos données chiffrées restent
-            intactes.
+            Par mesure de précaution, toutes les clés de session
+            ont été purgées et les accès restreints. Vos données
+            chiffrées restent intactes.
           </p>
 
-          <div className="pt-2">
-            <button
-              onClick={handleUnlockEmergency}
-              className="w-full inline-flex items-center justify-center gap-2 py-3 bg-[#c9a84c] hover:bg-[#e8d49a] text-[#0c0b0f] font-bold text-xs uppercase tracking-wider rounded-lg transition-colors cursor-pointer"
-            >
-              <RefreshCw className="w-4 h-4" />
-              <span>Déverrouiller le Terminal</span>
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={handleUnlockEmergency}
+            className="w-full inline-flex items-center justify-center gap-2 py-3 bg-[#c9a84c] hover:bg-[#e8d49a] text-[#0c0b0f] font-bold text-xs uppercase tracking-wider rounded-lg transition-colors cursor-pointer"
+          >
+            <RefreshCw className="w-4 h-4" />
+            <span>Déverrouiller le Terminal</span>
+          </button>
+
         </div>
       </div>
     );
@@ -221,78 +293,95 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0c0b0f] text-[#f0ead8] selection:bg-[#c9a84c]/30 selection:text-[#f0ead8]">
-      {/* Ambient background sound */}
+
       <AmbientSound />
 
-      {/* Top Security Status Ribbon */}
       <SecurityBadgeBanner
         sessionToken={sessionToken}
         auditCount={auditLogs.length}
       />
 
-      {/* Main Navigation */}
       <Navbar
         currentUser={currentUser}
-        onOpenMemberArea={() => setShowMemberArea(true)}
+        onOpenMemberArea={() =>
+          setShowMemberArea(true)
+        }
         onEmergencyLogout={handleEmergencyLock}
-        onOpenOfflineGuide={() => setShowOfflineGuide(true)}
+        onOpenOfflineGuide={() =>
+          setShowOfflineGuide(true)
+        }
       />
 
-      {/* Main Content */}
       <main className="flex-1">
-        {/* Hero */}
+
         <Hero
           onOpenOeuvres={() => {
-            const el = document.getElementById('oeuvres');
-            el?.scrollIntoView({ behavior: 'smooth' });
+            const el =
+              document.getElementById('oeuvres');
+
+            el?.scrollIntoView({
+              behavior: 'smooth',
+            });
           }}
-          onOpenMemberArea={() => setShowMemberArea(true)}
+          onOpenMemberArea={() =>
+            setShowMemberArea(true)
+          }
         />
 
-        {/* Œuvres List */}
         <OeuvresList
-          onReadExcerpt={(book) => setSelectedBookForReader(book)}
-          onOrderBook={(book) => setSelectedBookForOrder(book)}
+          onReadExcerpt={(book) =>
+            setSelectedBookForReader(book)
+          }
+          onOrderBook={(book) =>
+            setSelectedBookForOrder(book)
+          }
         />
 
-        {/* Genres and Literature Quote */}
         <GenresSection />
 
-        {/* About / Manifesto */}
         <AProposSection />
 
-        {/* Community VIP & Newsletter */}
-        <CommunitySection onSecurityEvent={logSecurityEvent} />
+        <CommunitySection
+          onSecurityEvent={logSecurityEvent}
+        />
 
-        {/* Contact with Mobile Money info & Encrypted Form */}
-        <ContactSection onSecurityEvent={logSecurityEvent} />
+        <ContactSection
+          onSecurityEvent={logSecurityEvent}
+        />
+
       </main>
 
-      {/* Footer */}
       <Footer
         onEmergencyLock={handleEmergencyLock}
-        onOpenMemberArea={() => setShowMemberArea(true)}
-        onOpenOfflineGuide={() => setShowOfflineGuide(true)}
+        onOpenMemberArea={() =>
+          setShowMemberArea(true)
+        }
+        onOpenOfflineGuide={() =>
+          setShowOfflineGuide(true)
+        }
       />
 
-      {/* Live Offline Indicator */}
       <OfflineIndicator
-        onOpenGuide={() => setShowOfflineGuide(true)}
+        onOpenGuide={() =>
+          setShowOfflineGuide(true)
+        }
       />
 
-      {/* Offline 24h & PWA Installation Guide */}
       {showOfflineGuide && (
         <OfflineGuideModal
-          onClose={() => setShowOfflineGuide(false)}
+          onClose={() =>
+            setShowOfflineGuide(false)
+          }
         />
       )}
 
-      {/* Secure E-Reader */}
       {selectedBookForReader && (
         <SecureReaderModal
           book={selectedBookForReader}
           sessionToken={sessionToken}
-          onClose={() => setSelectedBookForReader(null)}
+          onClose={() =>
+            setSelectedBookForReader(null)
+          }
           onOrderNow={(book) => {
             setSelectedBookForReader(null);
             setSelectedBookForOrder(book);
@@ -301,20 +390,23 @@ export default function App() {
         />
       )}
 
-      {/* Mobile Money Checkout */}
       {selectedBookForOrder && (
         <MobileMoneyOrderModal
           book={selectedBookForOrder}
           userOrders={userOrders}
-          onClose={() => setSelectedBookForOrder(null)}
+          onClose={() =>
+            setSelectedBookForOrder(null)
+          }
           onOrderCompleted={(receipt) => {
-            setUserOrders((prev) => [receipt, ...prev]);
+            setUserOrders((prev) => [
+              receipt,
+              ...prev,
+            ]);
           }}
           onSecurityEvent={logSecurityEvent}
         />
       )}
 
-      {/* Secure Member Area */}
       {showMemberArea && (
         <SecureMemberAreaModal
           currentUser={currentUser}
@@ -322,10 +414,13 @@ export default function App() {
           userOrders={userOrders}
           onLogin={handleLogin}
           onLogout={handleLogout}
-          onClose={() => setShowMemberArea(false)}
+          onClose={() =>
+            setShowMemberArea(false)
+          }
           onSecurityEvent={logSecurityEvent}
         />
       )}
+
     </div>
   );
 }
