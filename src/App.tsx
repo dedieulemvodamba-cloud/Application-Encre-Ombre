@@ -14,6 +14,7 @@ import { Footer } from './components/Footer';
 import { SecureReaderModal } from './components/SecureReaderModal';
 import { MobileMoneyOrderModal } from './components/MobileMoneyOrderModal';
 import { SecureMemberAreaModal } from './components/SecureMemberAreaModal';
+import { AdminPanel } from './components/AdminPanel';
 import { SplashScreen } from './components/SplashScreen';
 import { OfflineGuideModal } from './components/OfflineGuideModal';
 import { OfflineIndicator } from './components/OfflineIndicator';
@@ -22,6 +23,7 @@ import { ShieldAlert, KeyRound, RefreshCw, CheckCircle2 } from 'lucide-react';
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [showOfflineGuide, setShowOfflineGuide] = useState(false);
+  const [showAdminPanel, setShowAdminPanel] = useState(false);
 
   // Global Cryptographic Session
   const [sessionToken] = useState(() => generateSecureToken('SES-AUTH', 16));
@@ -222,10 +224,16 @@ export default function App() {
         onEmergencyLock={handleEmergencyLock}
         onOpenMemberArea={() => setShowMemberArea(true)}
         onOpenOfflineGuide={() => setShowOfflineGuide(true)}
+        onOpenAdminPanel={() => setShowAdminPanel(true)}
       />
 
       {/* Live Offline Indicator */}
       <OfflineIndicator onOpenGuide={() => setShowOfflineGuide(true)} />
+
+      {/* MODAL: Espace Auteur Firebase */}
+      {showAdminPanel && (
+        <AdminPanel onClose={() => setShowAdminPanel(false)} />
+      )}
 
       {/* MODAL: Offline 24h & PWA Installation Guide */}
       {showOfflineGuide && (

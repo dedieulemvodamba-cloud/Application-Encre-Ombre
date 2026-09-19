@@ -5,12 +5,14 @@ interface FooterProps {
   onEmergencyLock: () => void;
   onOpenMemberArea: () => void;
   onOpenOfflineGuide?: () => void;
+  onOpenAdminPanel?: () => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({
   onEmergencyLock,
   onOpenMemberArea,
   onOpenOfflineGuide,
+  onOpenAdminPanel,
 }) => {
   return (
     <footer className="bg-[#0c0b0f] border-t border-[#c9a84c]/15 px-4 sm:px-8 lg:px-12 py-10 text-xs text-[#8a8699]">
@@ -57,6 +59,15 @@ export const Footer: React.FC<FooterProps> = ({
             <Lock className="w-3 h-3" />
             <span>Coffre Sécurisé</span>
           </button>
+          {onOpenAdminPanel && (
+            <button
+              onClick={onOpenAdminPanel}
+              className="text-[#dcc074] hover:underline flex items-center gap-1 cursor-pointer"
+            >
+              <Shield className="w-3 h-3 text-[#c9a84c]" />
+              <span>Espace Auteur</span>
+            </button>
+          )}
         </div>
 
         {/* Emergency Lock */}
