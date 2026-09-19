@@ -214,9 +214,27 @@ export const SecureReaderModal: React.FC<SecureReaderModalProps> = ({
 
           {/* Chapter Content */}
           <div className="relative z-10 max-w-2xl mx-auto">
+            {/* Book Cover on First Page/Chapter */}
+            {activeChapterIndex === 0 && book.coverImage && (
+              <div className="flex flex-col items-center justify-center mb-10 text-center">
+                <div className="relative w-48 sm:w-60 aspect-[2/3] rounded-xl overflow-hidden shadow-2xl border-2 border-[#c9a84c]/50 bg-[#0c0b0f] group">
+                  <img
+                    src={book.coverImage}
+                    alt={book.title}
+                    className="w-full h-full object-cover"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-xl pointer-events-none" />
+                </div>
+                <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#c9a84c] mt-3">
+                  Couverture Officielle Illustrée
+                </span>
+              </div>
+            )}
+
             <div className="text-center mb-8 pb-4 border-b border-[#3d3854]/30">
               <span className="text-[11px] uppercase tracking-[0.25em] text-[#c9a84c] block mb-1">
-                Chapitre {currentChapter.number}
+                {currentChapter.title.includes('Page ') ? 'Feuillet' : `Chapitre ${currentChapter.number}`}
               </span>
               <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#f0ead8]">
                 {currentChapter.title}
@@ -267,6 +285,49 @@ export const SecureReaderModal: React.FC<SecureReaderModalProps> = ({
                         /^(NOTE\s*:|NOTE DE L'AUTEUR\s*:|CYCLE DES 50 VARIATIONS COMBINATOIRES\s*:|AVERTISSEMENT\s*:|STRUCTURE DE LA DYLOGIE\s*:|LES QUATRE DE VALOMBRE\s*:)\s*/,
                         ''
                       )}
+                    </div>
+                  );
+                }
+
+                if (paragraph.startsWith('Morale :')) {
+                  return (
+                    <div
+                      key={pIdx}
+                      className="my-8 p-6 rounded-2xl bg-[#231b12] border-2 border-amber-400/50 text-[#f0ead8] font-sans text-sm sm:text-base leading-relaxed shadow-xl"
+                    >
+                      <div className="flex items-center gap-2 font-bold text-amber-300 text-xs sm:text-sm uppercase tracking-wider mb-2">
+                        <span>✨</span>
+                        <span>Morale du conte</span>
+                      </div>
+                      <p className="font-serif italic text-base sm:text-lg text-amber-100/95 leading-relaxed">
+                        {paragraph.replace('Morale :', '').trim()}
+                      </p>
+                    </div>
+                  );
+                }
+
+                if (
+                  paragraph.startsWith('Mes chers petits-enfants') ||
+                  paragraph.startsWith('Fermez doucement vos petits yeux') ||
+                  paragraph.startsWith('Que votre nuit soit remplie') ||
+                  paragraph.startsWith('Je vous aime très fort')
+                ) {
+                  return (
+                    <div
+                      key={pIdx}
+                      className="my-4 p-5 rounded-2xl bg-[#1e1b28]/95 border border-[#c9a84c]/40 text-center font-serif text-[#e8d49a] text-base sm:text-lg italic leading-relaxed shadow-lg"
+                    >
+                      {paragraph}
+                    </div>
+                  );
+                }
+
+                if (paragraph.includes('FIN !')) {
+                  return (
+                    <div key={pIdx} className="my-10 text-center">
+                      <span className="font-serif font-black text-2xl sm:text-4xl tracking-widest text-[#c9a84c] border-y-2 border-[#c9a84c]/50 py-3 px-10 inline-block bg-[#1e1b28]/60 rounded-lg">
+                        {paragraph}
+                      </span>
                     </div>
                   );
                 }

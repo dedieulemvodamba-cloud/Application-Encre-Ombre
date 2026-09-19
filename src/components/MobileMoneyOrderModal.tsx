@@ -326,13 +326,23 @@ Conservez précieusement ce reçu pour votre espace lecteur.`;
               {/* STEP 1: Details */}
               {step === 'details' && (
                 <form onSubmit={handleSubmitDetails} className="space-y-4">
-                  <div className="p-3.5 rounded-xl bg-[#1e1b28] border border-[#3d3854]/40 flex justify-between items-center text-xs">
-                    <div>
-                      <span className="text-[#8a8699] block">Ouvrage sélectionné</span>
-                      <span className="font-serif font-bold text-sm text-[#f0ead8]">{book.title}</span>
-                      <span className="text-[11px] text-[#c9a84c] block">{book.badgeLabel}</span>
+                  <div className="p-3.5 rounded-xl bg-[#1e1b28] border border-[#3d3854]/40 flex items-center justify-between gap-3 text-xs">
+                    <div className="flex items-center gap-3 min-w-0">
+                      {book.coverImage && (
+                        <img
+                          src={book.coverImage}
+                          alt={book.title}
+                          className="w-12 h-16 rounded object-cover border border-[#c9a84c]/30 shrink-0"
+                          referrerPolicy="no-referrer"
+                        />
+                      )}
+                      <div className="min-w-0">
+                        <span className="text-[#8a8699] block">Ouvrage sélectionné</span>
+                        <span className="font-serif font-bold text-sm text-[#f0ead8] truncate block">{book.title}</span>
+                        <span className="text-[11px] text-[#c9a84c] block">{book.badgeLabel}</span>
+                      </div>
                     </div>
-                    <div className="text-right">
+                    <div className="text-right shrink-0">
                       <span className="text-[#8a8699] block">Montant à régler</span>
                       <span className="font-serif font-black text-base text-[#c9a84c]">
                         {book.priceFcfa.toLocaleString('fr-FR')} FCFA

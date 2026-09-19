@@ -141,6 +141,22 @@ export const OeuvresList: React.FC<OeuvresListProps> = ({ onReadExcerpt, onOrder
                 className="group relative bg-[#1e1b28] border border-[#c9a84c]/15 hover:border-[#c9a84c]/50 rounded-xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 shadow-lg"
               >
                 <div>
+                  {/* Book Cover if present */}
+                  {book.coverImage && (
+                    <div className="relative mb-5 w-full aspect-[16/10] sm:aspect-[16/11] rounded-lg overflow-hidden border border-[#c9a84c]/25 bg-[#0c0b0f] shadow-md group-hover:border-[#c9a84c]/60 transition-colors">
+                      <img
+                        src={book.coverImage}
+                        alt={book.title}
+                        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                        referrerPolicy="no-referrer"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#1e1b28]/80 via-transparent to-transparent pointer-events-none" />
+                      <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/75 backdrop-blur-sm text-[10px] font-mono text-[#e8d49a] border border-[#c9a84c]/30">
+                        Couverture certifiée
+                      </span>
+                    </div>
+                  )}
+
                   {/* Top metadata */}
                   <div className="flex items-center justify-between gap-2 mb-4">
                     <span className="text-[11px] uppercase tracking-[0.2em] text-[#c9a84c] font-medium">

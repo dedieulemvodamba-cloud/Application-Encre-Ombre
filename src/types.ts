@@ -20,6 +20,7 @@ export interface Book {
   chapters: Chapter[];
   isbnCode: string;
   rating: number;
+  coverImage?: string;
 }
 
 export interface UserAccount {

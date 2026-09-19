@@ -468,8 +468,9 @@ export const BOOKS_COLLECTION: Book[] = [
     genre: 'Conte & Littérature Jeunesse',
     badge: 'jeunesse',
     badgeLabel: 'Jeunesse & Conte',
+    coverImage: '/images/leo-le-petit-lapin.jpg',
     description:
-      "Dans une jolie forêt, Léo le petit lapin adore gambader le jour mais a un secret : il a très peur de la nuit. Guidé avec tendresse par sa maman, il découvre que les bruits ne sont pas des monstres mais le chant de la chouette, le vent dans les feuilles et la douce lumière des lucioles.",
+      "Dans une petite forêt entourée de grands arbres, vivait un adorable petit lapin nommé Léo. Il aimait courir dans les champs et jouer avec les papillons, mais avait un grand secret : il avait très peur de la nuit. Accompagné avec douceur par sa maman, Léo découvre la magie de la lune, le chant apaisant de la chouette et les lucioles qui éclairent l'obscurité.",
     priceFcfa: 4500,
     priceEur: 7.0,
     isbnCode: '978-2-958432-07-6',
@@ -478,151 +479,46 @@ export const BOOKS_COLLECTION: Book[] = [
     chapters: [
       {
         number: 1,
-        title: 'Le secret de Léo & Les bruits de la nuit',
+        title: 'Page 1 — Le secret de Léo et la chouette',
         content: [
           "Dans une petite forêt entourée de grands arbres, vivait un adorable petit lapin nommé Léo.",
-          "Léo avait de grandes oreilles, un petit nez rose et une queue toute blanche et ronde. Il aimait courir dans les champs, jouer avec les papillons et manger les carottes que sa maman lui préparait.",
-          "Mais Léo avait un secret… Il avait très peur de la nuit. 🌙",
-          "Chaque soir, lorsque le soleil commençait à disparaître derrière les arbres, Léo courait vite jusqu'à son terrier.",
-          "— Maman ! Maman ! La nuit arrive !",
-          "Sa maman souriait et lui répondait doucement :",
-          "— N'aie pas peur, mon petit Léo. La nuit est simplement le moment où la forêt se repose.",
-          "Mais Léo n'était pas convaincu.",
-          "Une nuit, alors qu'il était dans son petit lit, il entendit :",
-          "CRIC… CRAC…",
-          "Léo ouvrit grand les yeux.",
-          "— Qu'est-ce que c'était ? 😨",
-          "Il se cacha sous sa couverture.",
-          "Puis il entendit :",
-          "Houuu… houuu…",
-          "— Un monstre ! chuchota-t-il.",
-          "Sa maman entra dans la chambre :",
-          "— Ce n'est pas un monstre, mon petit. C'est simplement la chouette qui chante.",
-          "Léo sortit doucement sa tête de sous la couverture."
-        ]
-      },
-      {
-        number: 2,
-        title: 'Les lanternes de la forêt',
-        content: [
+          "Léo avait de grandes oreilles, un petit nez rose et une queue toute blanche et ronde. Il aimait courir dans les champs, jouer avec les papillons et manger les carottes que sa maman lui préparait. Mais Léo avait un secret …",
+          "Il avait très peur de la nuit. Chaque soir, lorsque le soleil commençait à disparaître derrière les arbres, Léo courait vite jusqu'à son terrier.",
+          "— Maman ! Maman ! La nuit arrive ! Sa maman souriait et lui répondait doucement :",
+          "— N'aie pas peur, mon petit Léo. La nuit est simplement le moment où la forêt se repose. Mais Léo n'était pas convaincu. Une nuit, alors qu'il était dans son petit lit, il entendit : CRIC … CRAC … Léo ouvrit grand les yeux.",
+          "— Qu'est-ce que c'était ? Il se cacha sous sa couverture. Puis il entendit : Houuu … houuu …",
+          "— Un monstre ! chuchota-t-il. Sa maman entra dans la chambre.",
+          "— Ce n'est pas un monstre, mon petit. C'est simplement la chouette qui chante. Léo sortit doucement sa tête de sous la couverture.",
           "— La chouette ?",
-          "— Oui. Elle chante pour saluer la lune.",
-          "Léo regarda par la fenêtre. Pour la première fois, il remarqua quelque chose de magnifique.",
-          "La lune brillait dans le ciel comme une grande lampe ronde. 🌕 Des milliers de petites étoiles scintillaient autour d'elle.",
-          "— Elles sont belles…",
-          "— Tu vois ? répondit maman. La nuit n'est pas seulement sombre. Elle cache aussi de très belles choses.",
-          "Léo sourit, mais il avait encore un peu peur.",
-          "Le lendemain soir, il décida de sortir quelques minutes avec sa maman. Ils s'assirent devant le terrier. Léo regarda les étoiles.",
-          "Il vit une petite luciole passer devant lui.",
-          "— Regarde, maman ! Une petite lumière !",
-          "— Oui. Les lucioles sont les petites lanternes de la forêt.",
-          "Léo se mit à rire. Puis il entendit le vent faire danser les feuilles.",
-          "Chhh… chhh…",
-          "Il écouta attentivement. Ce n'était pas un bruit effrayant. C'était comme une chanson. Tout autour de lui, les animaux se préparaient à dormir. Les oiseaux étaient silencieux."
-        ]
-      },
-      {
-        number: 3,
-        title: 'Le sommeil paisible & La belle découverte',
-        content: [
-          "Les écureuils étaient dans leurs nids. Les fleurs avaient refermé leurs pétales. Même la forêt semblait murmurer :",
-          "« Bonne nuit, Léo… »",
-          "Cette nuit-là, Léo retourna dans son lit. Il regarda la lune à travers la fenêtre.",
-          "— Bonne nuit, lune.",
-          "Puis il regarda les étoiles :",
-          "— Bonne nuit, petites lumières.",
-          "Il ferma les yeux. Et pour la première fois, il ne se cacha pas sous sa couverture.",
-          "Il s'endormit tranquillement. 😴💤",
-          "Depuis ce jour, Léo n'eut plus peur de la nuit. Il comprit que parfois, ce qui nous fait peur est simplement quelque chose que nous ne connaissons pas encore.",
-          "Et chaque soir, avant de dormir, Léo regardait la lune et disait :",
-          "« La nuit est calme, la forêt veille sur moi, et demain sera une nouvelle belle journée. » 🌙🐰",
-          "Puis il s'endormait avec un grand sourire.",
-          "🌟 MORALE DU CONTE :\nIl ne faut pas toujours avoir peur de ce que l'on ne connaît pas. Parfois, derrière nos peurs se cachent de magnifiques découvertes."
-        ]
-      }
-    ]
-  },
-  {
-    id: 'milo-nounours-gardien-des-reves',
-    title: 'Le nounours gardien des rêves',
-    subtitle: "Conte du coucher illustré — La mission secrète de Milo pour protéger le sommeil d'Emma",
-    genre: 'Conte & Littérature Jeunesse',
-    badge: 'jeunesse',
-    badgeLabel: 'Jeunesse & Dodo',
-    description:
-      "Dans une petite chambre aux murs couleur de ciel, vit Milo, un adorable nounours tout rond avec sa petite écharpe bleue. Mais Emma ignore un secret : la nuit, les nounours se réveillent pour chasser les mauvais rêves et préparer des mondes féeriques aux rivières de chocolat chaud !",
-    priceFcfa: 4500,
-    priceEur: 7.0,
-    isbnCode: '978-2-958432-08-3',
-    rating: 5.0,
-    tags: ['Histoire du soir', 'Nounours Gardien', 'Sommeil paisible', 'Magie & Rêves', 'Enfance'],
-    chapters: [
-      {
-        number: 1,
-        title: 'Le secret de minuit & La ronde de Milo',
-        content: [
-          "Dans une petite chambre aux murs couleur de ciel, vivait un adorable nounours appelé Milo.",
-          "Milo était doux, tout rond et très câlin. Il avait une petite écharpe bleue autour du cou et deux yeux noirs qui brillaient lorsqu'ils attrapaient la lumière de la lune.",
-          "Chaque soir, une petite fille appelée Emma le serrait très fort contre elle avant de dormir.",
-          "— Bonne nuit, Milo, disait-elle. Reste près de moi.",
-          "— Toujours, semblait répondre le petit nounours avec son sourire.",
-          "Mais Emma ignorait un secret… Lorsque les enfants s'endormaient, les nounours pouvaient se réveiller. ✨",
-          "Une nuit, lorsque l'horloge indiqua minuit, Milo ouvrit doucement les yeux. Il regarda Emma qui dormait paisiblement.",
-          "— Il est temps de commencer ma ronde, murmura-t-il.",
-          "Milo descendit du lit et marcha sur la pointe de ses petites pattes.",
-          "Il regarda sous le lit… Rien.",
-          "Il regarda derrière les rideaux… Rien.",
-          "Il ouvrit doucement la porte et observa le couloir… Tout était calme.",
-          "Car Milo avait une mission très importante : protéger les rêves d'Emma. 🌙"
+          "— Oui. Elle chante pour saluer la lune. Léo regarda par la fenêtre. Pour la première fois, il remarqua quelque chose de magnifique. La lune brillait dans le ciel comme une grande lampe ronde. Des milliers de petites étoiles scintillaient autour d'elle.",
+          "— Elles sont belles …",
+          "— Tu vois ? répondit maman. La nuit n'est pas seulement sombre. Elle cache aussi de très belles choses. Léo sourit, mais il avait encore un peu peur. Le lendemain soir, il décida de sortir quelques minutes avec sa maman. Ils"
         ]
       },
       {
         number: 2,
-        title: 'Le mauvais rêve & La formule magique',
+        title: 'Page 2 — Les lucioles et la paix de la nuit',
         content: [
-          "Soudain, une petite fumée grise apparut au bout du couloir. Milo fronça les sourcils :",
-          "— Oh non… un mauvais rêve !",
-          "La fumée entra doucement dans la chambre. Elle se transforma en un grand nuage rempli de petites images inquiétantes.",
-          "Emma commença à bouger dans son sommeil :",
-          "— Non… murmura-t-elle.",
-          "Milo courut jusqu'à son oreiller. Il posa ses deux petites pattes dessus et prononça la formule magique des nounours :",
-          "« Que les mauvais rêves s'en aillent,\nque les étoiles brillent,\net que le cœur de l'enfant retrouve la paix. » ✨",
-          "Aussitôt, une lumière douce et bienveillante apparut autour de Milo. Le nuage gris recula, puis disparut complètement.",
-          "Emma sourit dans son sommeil. Milo soupira de soulagement :",
-          "— Voilà… tout va bien.",
-          "Mais sa mission n'était pas terminée. Il devait maintenant préparer un joli rêve."
+          "s'assirent devant le terrier. Léo regarda les étoiles. Il vit une petite luciole passer devant lui.",
+          "— Regarde, maman ! Une petite lumière !",
+          "— Oui. Les lucioles sont les petites lanternes de la forêt. Léo se mit à rire. Puis il entendit le vent faire danser les feuilles. Chhh … chhh … Il écouta attentivement. Ce n'était pas un bruit effrayant. C'était comme une chanson.",
+          "Tout autour de lui, les animaux se préparaient à dormir. Les oiseaux étaient silencieux. Les écureuils étaient dans leurs nids. Les fleurs avaient refermé leurs pétales. Même la forêt semblait murmurer :",
+          "« Bonne nuit, Léo … » Cette nuit-là, Léo retourna dans son lit. Il regarda la lune à travers la fenêtre.",
+          "— Bonne nuit, lune. Puis il regarda les étoiles.",
+          "— Bonne nuit, petites lumières. Il ferma les yeux. Et pour la première fois, il ne se cacha pas sous sa couverture. Il s'endormit tranquillement. Depuis ce jour, Léo n'eut plus peur de la nuit. Il comprit que parfois, ce qui nous fait peur est simplement quelque chose que nous ne connaissons pas encore. Et chaque soir, avant de dormir, Léo regardait la lune et disait :",
+          "« La nuit est calme, la forêt veille sur moi, et demain sera une nouvelle belle journée. » Puis il s'endormait avec un grand sourire.",
+          "Morale : Il ne faut pas toujours avoir peur de ce que l'on ne connaît pas. Parfois, derrière nos peurs se cachent de magnifiques découvertes.",
+          "Mes chers petits-enfants, maintenant que l’histoire de Léo est terminée, je vous souhaite une très bonne nuit. 🌙✨",
+          "Fermez doucement vos petits yeux, laissez vos rêves vous emmener vers de belles aventures et surtout… dormez bien ! 🐰💤"
         ]
       },
       {
         number: 3,
-        title: 'La recette enchantée & Le jardin aux bonbons',
+        title: 'Page 3 — Douce nuit & Dédicace finale',
         content: [
-          "Milo ouvrit sa petite boîte magique, cachée derrière l'oreiller. À l'intérieur se trouvaient les précieux ingrédients du songe :",
-          "⭐ Une poignée de poussière d'étoiles,",
-          "🌸 Trois pétales de fleurs de lune,",
-          "🦋 Une aile de papillon imaginaire,",
-          "🌈 Et un petit morceau d'arc-en-ciel.",
-          "Milo mélangea tout cela avec amour...",
-          "PLOUF !",
-          "Une porte brillante apparut devant lui. De l'autre côté se trouvait un magnifique jardin : les arbres étaient remplis de bonbons, les rivières étaient faites de chocolat chaud, les fleurs chantaient doucement et de petits lapins dansaient sous les étoiles. 🐰✨",
-          "Milo sourit :",
-          "— C'est parfait pour Emma.",
-          "Il souffla doucement sur la poussière magique. Elle entra dans le sommeil d'Emma. Aussitôt, Emma se retrouva dans le magnifique jardin : elle courait avec les petits lapins, riait avec les fleurs et regardait les étoiles danser dans le ciel.",
-          "Pendant ce temps, Milo retourna s'asseoir près de son oreiller. Il regarda Emma sourire :",
-          "— Dors bien, petite Emma.",
-          "Puis il ferma doucement les yeux."
-        ]
-      },
-      {
-        number: 4,
-        title: "Le réveil d'Emma & Le serment des gardiens",
-        content: [
-          "Lorsque le soleil se leva le lendemain matin, Emma ouvrit les yeux. Elle attrapa Milo et le serra très fort :",
-          "— J'ai fait un très beau rêve cette nuit !",
-          "Milo ne répondit pas. Il resta simplement assis sur son lit avec son petit sourire habituel.",
-          "Emma ne pouvait pas savoir que pendant toute la nuit… son nounours avait veillé sur elle. 🧸❤️",
-          "Et depuis ce jour, chaque fois qu'Emma s'endormait, Milo accomplissait sa mission. Il chassait les cauchemars, il protégeait les rêves, et surtout… il rappelait à tous les enfants qu'ils n'étaient jamais seuls dans la nuit.",
-          "INVITATION DU SOIR :\nAlors, si ce soir tu as ton nounours près de toi, serre-le bien fort.\nFerme les yeux…\nRespire doucement…\nEt laisse ton gardien des rêves t'emmener dans un monde rempli d'étoiles. 🌙✨\n\nBonne nuit… fais de beaux rêves. 💤🧸"
+          "Que votre nuit soit remplie de beaux rêves, de douceur et de magie. ⭐🌙",
+          "Je vous aime très fort. ❤",
+          "FIN !!!!!!"
         ]
       }
     ]
