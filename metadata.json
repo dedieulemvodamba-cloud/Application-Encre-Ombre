@@ -1,6 +1,6 @@
 {
-  "name": "Encre & Ombre — Littérature Sécurisée",
-  "description": "Plateforme littéraire sécurisée pour les œuvres d'Encre & Ombre avec espace lecteur chiffré, commandes mobiles sécurisées et protection du contenu.",
+  "name": "Encre & Ombre",
+  "description": "Plateforme littéraire et bibliothèque immersive de récits à suspense, romance sombre et littérature fantastique.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
