@@ -19,7 +19,7 @@ export const OeuvresList: React.FC<OeuvresListProps> = ({ onReadExcerpt, onOrder
           b =>
             b.badge === filter ||
             (filter === 'roman' &&
-              (b.id === 'ombre-de-kinshasa' ||
+              (b.id === 'ombre-du-congo' ||
                 b.id === 'amour-au-dela-du-hasard' ||
                 b.id === 'les-enfants-de-lombre'))
         );
@@ -73,14 +73,14 @@ export const OeuvresList: React.FC<OeuvresListProps> = ({ onReadExcerpt, onOrder
               Bandes Dessinées
             </button>
             <button
-              onClick={() => setFilter('doc')}
+              onClick={() => setFilter('horreur')}
               className={`px-3.5 py-1.5 rounded-full uppercase tracking-wider transition-all cursor-pointer ${
-                filter === 'doc'
-                  ? 'bg-[#c9a84c] text-[#0c0b0f] font-bold'
-                  : 'bg-[#1e1b28] text-[#8a8699] hover:text-[#f0ead8] border border-[#3d3854]/40'
+                filter === 'horreur'
+                  ? 'bg-red-800 text-white font-bold'
+                  : 'bg-[#1e1b28] text-red-400/90 hover:text-red-300 border border-red-800/40'
               }`}
             >
-              Essais &amp; Docs
+              🩸 Horreur Surnaturelle
             </button>
             <button
               onClick={() => setFilter('jeunesse')}
@@ -90,27 +90,17 @@ export const OeuvresList: React.FC<OeuvresListProps> = ({ onReadExcerpt, onOrder
                   : 'bg-[#1e1b28] text-amber-300/80 hover:text-[#f0ead8] border border-amber-400/30'
               }`}
             >
-              🐰 Jeunesse &amp; Contes
+              🧸 Jeunesse &amp; Contes
             </button>
             <button
-              onClick={() => setFilter('horreur')}
+              onClick={() => setFilter('doc')}
               className={`px-3.5 py-1.5 rounded-full uppercase tracking-wider transition-all cursor-pointer ${
-                filter === 'horreur'
-                  ? 'bg-red-800 text-white font-bold'
-                  : 'bg-[#1e1b28] text-red-400/90 hover:text-red-300 border border-red-800/40'
-              }`}
-            >
-              🩸 Horreur
-            </button>
-            <button
-              onClick={() => setFilter('sacre')}
-              className={`px-3.5 py-1.5 rounded-full uppercase tracking-wider transition-all cursor-pointer ${
-                filter === 'sacre'
+                filter === 'doc'
                   ? 'bg-[#c9a84c] text-[#0c0b0f] font-bold'
-                  : 'bg-[#1e1b28] text-[#e8d49a] hover:text-[#f0ead8] border border-[#c9a84c]/30'
+                  : 'bg-[#1e1b28] text-[#8a8699] hover:text-[#f0ead8] border border-[#3d3854]/40'
               }`}
             >
-              ✦ Textes Sacrés
+              Essais &amp; Romance
             </button>
           </div>
         </div>
