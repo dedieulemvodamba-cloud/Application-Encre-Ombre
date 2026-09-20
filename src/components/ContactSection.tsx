@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CONTACT_INFO } from '../data/books';
 import { sanitizeInput } from '../lib/crypto';
+import { sendNotificationEmail } from '../lib/email';
 import {
   Mail,
   Send,
@@ -10,7 +11,6 @@ import {
   ShieldCheck,
   Copy,
   Check,
-  Lock,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -19,23 +19,18 @@ interface ContactSectionProps {
 }
 
 export const ContactSection: React.FC<ContactSectionProps> = ({ onSecurityEvent }) => {
-  // Form fields
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
-
-  // Honeypot anti-spam (champ invisible nommé "website")
   const [website, setWebsite] = useState('');
 
-  // Submission state
   const [isSending, setIsSending] = useState(false);
   const [feedback, setFeedback] = useState<{
     type: 'success' | 'error' | null;
     message: string;
   }>({ type: null, message: '' });
 
-  // Clipboard feedback for phone cards
   const [copiedItem, setCopiedItem] = useState<string | null>(null);
 
   const handleCopy = (text: string, id: string) => {
@@ -45,16 +40,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onSecurityEvent 
   };
 
   const validateForm = (): string | null => {
-    if (!name.trim()) {
-      return 'Le nom de l’abonné est obligatoire.';
-    }
+    if (!name.trim()) return 'Le nom de l’abonné est obligatoire.';
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email.trim() || !emailRegex.test(email.trim())) {
       return 'Veuillez renseigner une adresse email valide.';
     }
-    if (!subject.trim()) {
-      return 'Le sujet est obligatoire.';
-    }
+    if (!subject.trim()) return 'Le sujet est obligatoire.';
     if (!message.trim() || message.trim().length < 5) {
       return 'Le message doit contenir au moins 5 caractères.';
     }
@@ -66,17 +57,17 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onSecurityEvent 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Empêcher les doubles clics
     if (isSending) return;
 
-    // Validation côté client
+    // Honeypot anti-spam : si rempli, on fait semblant que ça a marché
+    if (website) {
+      setFeedback({ type: 'success', message: 'Message envoyé avec succès' });
+      return;
+    }
+
     const validationError = validateForm();
     if (validationError) {
-      setFeedback({
-        type: 'error',
-        message: validationError,
-      });
+      setFeedback({ type: 'error', message: validationError });
       return;
     }
 
@@ -84,58 +75,32 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onSecurityEvent 
     setFeedback({ type: null, message: '' });
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: sanitizeInput(name),
-          email: email.trim(),
-          subject: sanitizeInput(subject),
-          message: sanitizeInput(message),
-          website: website, // Champ honeypot invisible
-        }),
+      await sendNotificationEmail({
+        subject: `Nouveau message — ${sanitizeInput(subject)}`,
+        user_email: email.trim(),
+        message:
+          `Nom : ${sanitizeInput(name)}\n` +
+          `Email : ${email.trim()}\n` +
+          `Sujet : ${sanitizeInput(subject)}\n\n` +
+          `Message :\n${sanitizeInput(message)}`,
       });
 
-      const data = await response.json().catch(() => ({}));
+      setFeedback({ type: 'success', message: 'Message envoyé avec succès' });
+      setName('');
+      setEmail('');
+      setSubject('');
+      setMessage('');
+      setWebsite('');
 
-      if (response.ok && data.ok) {
-        // Message envoyé avec succès
-        setFeedback({
-          type: 'success',
-          message: 'Message envoyé avec succès',
-        });
-
-        // Vider le formulaire après succès
-        setName('');
-        setEmail('');
-        setSubject('');
-        setMessage('');
-        setWebsite('');
-
-        onSecurityEvent(
-          'CONTACT_MESSAGE_SENT',
-          `Message transmis avec succès pour ${sanitizeInput(name)}`
-        );
-      } else {
-        const errorMsg =
-          data.error ||
-          (response.status === 400
-            ? 'Données invalides. Veuillez vérifier votre saisie.'
-            : "Erreur lors de l'envoi du message. Veuillez réessayer ultérieurement.");
-
-        setFeedback({
-          type: 'error',
-          message: errorMsg,
-        });
-      }
+      onSecurityEvent(
+        'CONTACT_MESSAGE_SENT',
+        `Message transmis avec succès pour ${sanitizeInput(name)}`
+      );
     } catch (err) {
       console.error('Contact submission error:', err);
       setFeedback({
         type: 'error',
-        message:
-          'Impossible de joindre le serveur. Veuillez vérifier votre connexion internet et réessayer.',
+        message: "Erreur lors de l'envoi du message. Veuillez réessayer ultérieurement.",
       });
     } finally {
       setIsSending(false);
@@ -145,7 +110,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onSecurityEvent 
   return (
     <section id="contact" className="py-20 px-4 sm:px-8 lg:px-12 bg-[#1e1b28] relative">
       <div className="max-w-4xl mx-auto text-center">
-        {/* Section Header */}
         <p className="text-[#c9a84c] text-xs uppercase tracking-[0.25em] font-semibold mb-2 opacity-80">
           Nous contacter
         </p>
@@ -158,9 +122,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onSecurityEvent 
           directement.
         </p>
 
-        {/* Direct Contact Info Cards (Congo +242) */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12 text-left">
-          {/* Phone */}
           <div className="p-5 rounded-xl bg-[#2d293d] border border-[#c9a84c]/20 hover:border-[#c9a84c] transition-all flex items-center justify-between group">
             <div className="flex items-center gap-3.5">
               <span className="text-2xl">📞</span>
@@ -189,7 +151,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onSecurityEvent 
             </button>
           </div>
 
-          {/* MTN MoMo */}
           <div className="p-5 rounded-xl bg-[#2d293d] border border-[#c9a84c]/20 hover:border-[#c9a84c] transition-all flex items-center justify-between group">
             <div className="flex items-center gap-3.5">
               <span className="text-2xl">💛</span>
@@ -218,7 +179,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onSecurityEvent 
             </button>
           </div>
 
-          {/* Airtel Money */}
           <div className="p-5 rounded-xl bg-[#2d293d] border border-[#c9a84c]/20 hover:border-[#c9a84c] transition-all flex items-center justify-between group">
             <div className="flex items-center gap-3.5">
               <span className="text-2xl">❤️</span>
@@ -248,9 +208,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onSecurityEvent 
           </div>
         </div>
 
-        {/* Contact Form Container */}
         <div className="max-w-xl mx-auto bg-[#13111a] border border-[#c9a84c]/25 rounded-2xl p-6 sm:p-8 shadow-2xl text-left">
-          {/* Form Title with required Envelope Icon */}
           <div className="flex items-center gap-2.5 mb-2 pb-3 border-b border-[#3d3854]/40">
             <div className="p-2 rounded-lg bg-[#c9a84c]/10 border border-[#c9a84c]/30 text-[#c9a84c]">
               <Mail className="w-5 h-5" />
@@ -265,7 +223,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onSecurityEvent 
             </div>
           </div>
 
-          {/* Feedback Banners */}
           <AnimatePresence>
             {feedback.type === 'success' && (
               <motion.div
@@ -292,9 +249,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onSecurityEvent 
             )}
           </AnimatePresence>
 
-          {/* Main Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Honeypot invisible pour contrer les robots (Champ nommé "website") */}
             <div
               style={{
                 display: 'none',
@@ -320,7 +275,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onSecurityEvent 
               />
             </div>
 
-            {/* Field 1: Nom de l'abonné */}
             <div>
               <label className="block text-xs uppercase tracking-wider text-[#8a8699] font-medium mb-1.5">
                 Nom de l'abonné <span className="text-[#c9a84c]">*</span>
@@ -335,7 +289,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onSecurityEvent 
               />
             </div>
 
-            {/* Field 2: Adresse email */}
             <div>
               <label className="block text-xs uppercase tracking-wider text-[#8a8699] font-medium mb-1.5">
                 Adresse email <span className="text-[#c9a84c]">*</span>
@@ -350,7 +303,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onSecurityEvent 
               />
             </div>
 
-            {/* Field 3: Sujet */}
             <div>
               <label className="block text-xs uppercase tracking-wider text-[#8a8699] font-medium mb-1.5">
                 Sujet <span className="text-[#c9a84c]">*</span>
@@ -365,7 +317,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onSecurityEvent 
               />
             </div>
 
-            {/* Field 4: Message */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
                 <label className="block text-xs uppercase tracking-wider text-[#8a8699] font-medium">
@@ -395,7 +346,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onSecurityEvent 
               />
             </div>
 
-            {/* Submit Action */}
             <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
               <span className="text-[11px] text-[#8a8699] flex items-center gap-1.5">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />

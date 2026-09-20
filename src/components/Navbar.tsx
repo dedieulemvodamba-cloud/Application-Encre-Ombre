@@ -8,6 +8,7 @@ interface NavbarProps {
   onOpenMemberArea: () => void;
   onEmergencyLogout: () => void;
   onOpenOfflineGuide?: () => void;
+  onOpenAdminPanel?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -15,6 +16,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenMemberArea,
   onEmergencyLogout,
   onOpenOfflineGuide,
+  onOpenAdminPanel,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -74,6 +76,17 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <Smartphone className="w-3.5 h-3.5 text-[#c9a84c]" />
               <span>Hors-Ligne 24h</span>
+            </button>
+          )}
+
+          {onOpenAdminPanel && (
+            <button
+              onClick={onOpenAdminPanel}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-[#c9a84c]/35 bg-[#1e1b28]/70 hover:bg-[#c9a84c]/15 hover:border-[#c9a84c] text-[#e8d49a] text-xs font-medium tracking-wide transition-all cursor-pointer shadow-sm"
+              title="Espace Auteur — Validation des commandes et gestion"
+            >
+              <Shield className="w-3.5 h-3.5 text-[#c9a84c]" />
+              <span>Espace Auteur</span>
             </button>
           )}
 
@@ -188,9 +201,21 @@ export const Navbar: React.FC<NavbarProps> = ({
               }}
               className="w-full flex items-center justify-center gap-2 py-2 bg-[#c9a84c] text-[#0c0b0f] font-semibold text-xs rounded uppercase tracking-wider"
             >
-              <Shield className="w-3.5 h-3.5" />
-              <span>{currentUser ? 'Mon Coffre-fort' : 'Connexion Sécurisée'}</span>
+              <KeyRound className="w-3.5 h-3.5" />
+              <span>{currentUser ? 'Mon Coffre-fort' : 'Espace Lecteur'}</span>
             </button>
+            {onOpenAdminPanel && (
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenAdminPanel();
+                }}
+                className="w-full flex items-center justify-center gap-2 py-2 border border-[#c9a84c]/50 bg-[#1e1b28] text-[#dcc074] font-semibold text-xs rounded uppercase tracking-wider hover:bg-[#c9a84c]/20"
+              >
+                <Shield className="w-3.5 h-3.5 text-[#c9a84c]" />
+                <span>Espace Auteur</span>
+              </button>
+            )}
           </div>
         </div>
       )}

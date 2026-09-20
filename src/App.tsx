@@ -187,6 +187,7 @@ export default function App() {
         onOpenMemberArea={() => setShowMemberArea(true)}
         onEmergencyLogout={handleEmergencyLock}
         onOpenOfflineGuide={() => setShowOfflineGuide(true)}
+        onOpenAdminPanel={() => setShowAdminPanel(true)}
       />
 
       {/* Main Content */}
